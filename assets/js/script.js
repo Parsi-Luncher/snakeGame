@@ -209,7 +209,7 @@ window.addEventListener("touchstart", e => {
         touchStartX = t.clientX;
         touchStartY = t.clientY;
     }
-}, { passive: true });
+}, { passive: false });
 
 window.addEventListener("touchend", e => {
     const t = e.changedTouches[0],

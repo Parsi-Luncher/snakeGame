@@ -1,21 +1,25 @@
 # Changelog
 
+## V0.4.1 Alpha - 2025-12-07
+
+### Bug Fixed:
+- Fixed mobile swipe controls (Hot fix)
+
 ## V0.4.0 Alpha - 2025-12-07
+
+### New features:
 - Added mobile swipe controls
-- >  V0.3.5 Alpha
-  >- Improved pc controls performance
 
-- > V0.3.4 Alpha
-  > - Fixed food spawn bug on mobile
+- Added target parameter to togglePause function in game engine
 
-- > V0.3.3 Alpha
-  > - Improved fullscreen style
+### Improved:
+- Improved pc controls performance
 
-- > V0.3.2 Alpha
-  >- Improved fullscreen performance(10ms)
+- Improved fullscreen style
+- Improved fullscreen performance (10ms)
 
-- > V0.3.1 Alpha
-  > - Added target parameter to togglePause function in game engine
+### Bug Fixed:
+- Fixed food spawn bug on mobile
 
 ## V0.3.0 Alpha - 2025-12-06
 - Initial release of Snake geme alpha

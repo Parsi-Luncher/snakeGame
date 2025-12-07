@@ -6,8 +6,11 @@
 
 body {
     background-color: #1d1d1d;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
 }
 
 #game {
     display: block;
+    background: #1d1d1d;
 }
