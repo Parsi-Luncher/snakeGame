@@ -9,7 +9,7 @@
         speed: 2,
         update: undefined,
         draw: undefined,
-        pause: false,
+        isPause: false,
 
         gameLoop: (time) => {
             let delta = (time - lastTime) / 1000;
@@ -18,7 +18,7 @@
 
             const step = 1 / engine.speed;
             while (engine.accumulator >= step) {
-                if (engine.update && !engine.pause) {
+                if (engine.update && !engine.isPause) {
                     engine.update.call();
                 }
                 engine.accumulator -= step;
@@ -29,30 +29,38 @@
             }
             requestAnimationFrame(engine.gameLoop);
         },
-        togglePause: () => {
-            if (!engine.pause) {
-                engine.pause = true
+        togglePause: (target) => {
+            if (target == null) {
+                if (!engine.isPause) {
+                    engine.isPause = true
+                } else {
+                    engine.isPause = false
+                }
             } else {
-                engine.pause = false
+                if (typeof target === "boolean") {
+                    if (engine.isPause !== target)
+                        engine.togglePause()
+                } else {
+                    throw new Error("In togglePause target type must be boolean!");
+                }
             }
         },
         setFullScreen: (callBack) => {
             if (!document.fullscreen) {
-                console.time()
                 document.documentElement.requestFullscreen();
-                console.timeEnd()
             } else {
                 document.exitFullscreen();
             }
 
-            document.addEventListener("fullscreenchange", function handler()  {
+            document.addEventListener("fullscreenchange", function handler() {
                 if (callBack) {
-                    callBack.call();
+                    setTimeout(callBack, 90);
                 }
 
-                document.addEventListener("fullscreenchange",handler)
+                document.addEventListener("fullscreenchange", handler)
             })
-        }
+        },
+
     }
 
     window.engine = engine;

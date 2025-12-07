@@ -9,7 +9,10 @@ let baseSpeed = 6,
     velocity = { x: 1, y: 0 },
     lastMove = "right",
 
-    food = { x: 15, y: 15 },
+    food = {
+        x: Math.floor(Math.random() * (canvas.width / grid)),
+        y: Math.floor(Math.random() * (canvas.height / grid))
+    },
     particles = [],
 
     score = 0;
@@ -136,24 +139,6 @@ function spawnFood() {
     }
 }
 
-document.addEventListener("keydown", e => {
-    if (e.key === "ArrowUp" && lastMove !== "down") {
-        velocity = { x: 0, y: -1 };
-        lastMove = "up";
-    }
-    if (e.key === "ArrowDown" && lastMove !== "up") {
-        velocity = { x: 0, y: 1 };
-        lastMove = "down";
-    }
-    if (e.key === "ArrowLeft" && lastMove !== "right") {
-        velocity = { x: -1, y: 0 };
-        lastMove = "left";
-    }
-    if (e.key === "ArrowRight" && lastMove !== "left") {
-        velocity = { x: 1, y: 0 };
-        lastMove = "right";
-    }
-});
 
 function resetGame() {
     snakeBody = [{ x: 10, y: 10 }];
@@ -164,24 +149,91 @@ function resetGame() {
     engine.accumulator = 0;
 }
 
-document.addEventListener("keydown", (e) => {
+window.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
         engine.togglePause()
     } else if (e.key === "F9" || e.key === "F11") {
         engine.setFullScreen(() => {
-            setTimeout(() => {
-                if (!engine.pause) {
-                    engine.togglePause()
-                }
 
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
+            const isPause = engine.isPause;
 
-                if (engine.pause) {
-                    engine.togglePause()
-                }
-            },100)
+            engine.togglePause(true);
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            engine.togglePause(isPause);
         })
+    }
+})
+
+window.addEventListener("keydown", e => {
+    switch (e.key) {
+        case "ArrowUp":
+            if (lastMove !== "down") {
+                velocity = { x: 0, y: -1 };
+                lastMove = "up";
+            }
+            break;
+
+        case "ArrowDown":
+            if (lastMove !== "up") {
+                velocity = { x: 0, y: 1 };
+                lastMove = "down";
+            }
+            break;
+
+        case "ArrowLeft":
+            if (lastMove !== "right") {
+                velocity = { x: -1, y: 0 };
+                lastMove = "left";
+            }
+            break;
+
+        case "ArrowRight":
+            if (lastMove !== "left") {
+                velocity = { x: 1, y: 0 };
+                lastMove = "right";
+            }
+            break;
+    }
+});
+
+let touchStartX = 0,
+    touchStartY = 0,
+    minSwipe = 25;
+
+window.addEventListener("touchstart", e => {
+    if (e.touches.length > 0) {
+        const t = e.touches[0];
+        touchStartX = t.clientX;
+        touchStartY = t.clientY;
+    }
+}, { passive: true });
+
+window.addEventListener("touchend", e => {
+    const t = e.changedTouches[0],
+        dx = t.clientX - touchStartX,
+        dy = t.clientY - touchStartY;
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+        if (dx > minSwipe && lastMove !== "left") {
+            velocity = { x: 1, y: 0 };
+            lastMove = "right";
+        } else if (dx < -minSwipe && lastMove !== "right") {
+            velocity = { x: -1, y: 0 };
+            lastMove = "left";
+        }
+    } else {
+        if (dy > minSwipe && lastMove !== "up") {
+            velocity = { x: 0, y: 1 };
+            lastMove = "down";
+        } else if (dy < -minSwipe && lastMove !== "down") {
+            {
+                velocity = { x: 0, y: -1 };
+                lastMove = "up";
+            }
+        }
     }
 })
 
